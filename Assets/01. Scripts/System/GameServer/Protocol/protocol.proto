@@ -1,0 +1,62 @@
+syntax = "proto3"; //proto3 문법사용
+
+package Protocol;
+option csharp_namespace = "Google.Protobuf.Protocol"; //네임스페이스 같은것
+
+enum MsgId{
+	S_ENTER = 0;
+	S_LEAVE = 1;
+	S_SPAWN = 2;
+	S_DESTROY= 3;
+	S_ROUNDSTART = 4;
+	S_ROUNDEND = 5;
+	C_MOVE = 6;
+	S_MOVE = 7;
+	C_SHOOT = 8;
+	S_SHOOT = 9;
+	S_CHANGE_HP = 10;
+}
+
+message S_Enter{
+
+}
+
+message S_Leave{
+
+}
+
+message S_Spawn{
+
+}
+
+message S_Destroy{
+
+}
+
+message S_Roundstart{
+
+}
+
+message S_Roundend{
+
+}
+
+message C_Move{
+
+}
+
+message S_Move{
+
+}
+
+message C_Shoot{
+
+}
+
+message S_Shoot{
+
+}
+
+message S_ChangeHp{
+
+}

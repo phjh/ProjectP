@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0022: 메서드에 블록 본문 사용
+dotnet_diagnostic.IDE0022.severity = none
