@@ -9,9 +9,6 @@ public class GameManager : MonoSingleton<GameManager>
     [HideInInspector]
     public Player player;
 
-    [HideInInspector]
-    public InGameFlow game;
-
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -21,10 +18,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         MakePool();
     }
-  
-    
-
-
 
     private void MakePool()
     {

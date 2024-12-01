@@ -11,8 +11,11 @@ namespace ServerCore
 	{
 		private string userId;
 		private string userPassword;
+		
 		public string userName;
 		public int userScore;
+		public int usernum;
+		public Team team;
 
 		public RectTransform errorUI;
 		[SerializeField]
@@ -25,6 +28,24 @@ namespace ServerCore
 		void Start()
 		{
 			DontDestroyOnLoad(this.gameObject);
+		}
+
+		public UserInfo GetUserInfo()
+		{
+			UserInfo info = new UserInfo();
+			info.UserName = userName;
+			info.UserScore = userScore;
+			info.Usernum = usernum;
+			info.NowTeam = team;
+			return info;
+		}
+
+		public void SetUserInfo(UserInfo info)
+		{
+			userName = info.UserName;
+			userScore = info.UserScore;
+			usernum = info.Usernum;
+			team = info.NowTeam;
 		}
 
 		public void Login(string id, string password)

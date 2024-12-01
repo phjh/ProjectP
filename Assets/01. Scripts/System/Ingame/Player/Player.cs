@@ -1,3 +1,4 @@
+using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ public class Player : Entity
     [SerializeField]
     private PlayerUI playerUI;
 
-    [SerializeField]
+    [SerializeField] //0¿¡ move, 1¿¡ attack
     private List<PlayerInherit> playerComponents;
 
     public InputReader _input;
@@ -32,7 +33,10 @@ public class Player : Entity
 	private void Awake()
 	{
         if (GameManager.Instance.player == null)
+        {
             GameManager.Instance.player = this;
+            Debug.Log("new player set");
+        }
         var stat = Instantiate(status);
         status = stat;
 	}
@@ -158,4 +162,6 @@ public class Player : Entity
             AddCardEvent();
         }
     }
+
+    public PlayerAttack GetPlayerAttack() => playerComponents[1] as PlayerAttack;
 }

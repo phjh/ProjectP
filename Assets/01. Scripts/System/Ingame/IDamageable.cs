@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public interface IDamageable
 {
-    public ObjectTeam team {  get; set; }
+    public Team team {  get; set; }
 
     public float maxHp { get; set; }
     public float nowHp { get; set; }

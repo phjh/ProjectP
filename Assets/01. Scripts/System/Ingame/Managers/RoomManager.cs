@@ -16,13 +16,14 @@ public class RoomManager : MonoSingleton<RoomManager>
 		DontDestroyOnLoad(this.gameObject);
 	}
 
-	public void CreateRoom(int roomid, string name, int userlimit, int users, bool usePw)
+	public void CreateRoomUI(int roomid, string name, int userlimit, int users, bool usePw)
 	{
 		PoolableMono mono = PoolManager.Instance.Pop(PoolUIListEnum.Rooms);
 		mono.transform.SetParent(RoomScroll);
 		Rooms room = mono.GetComponent<Rooms>();
 		room.SetRoomUI(name, userlimit, users, usePw, roomid);
 		_roomLists.Add(roomid, room);
+		selectedRoom = room;
 	}
 
 	public void JoinRoom()
@@ -30,7 +31,7 @@ public class RoomManager : MonoSingleton<RoomManager>
 
 	}
 
-	public void RemoveRoom(int roomid)
+	public void RemoveRoomUI(int roomid)
 	{
 		PoolableMono mono = _roomLists[roomid].gameObject.GetComponent<PoolableMono>();
 		PoolManager.Instance.Push(mono, PoolUIListEnum.Rooms);
@@ -39,5 +40,18 @@ public class RoomManager : MonoSingleton<RoomManager>
 
 	public void SelectRoom(Rooms room) => selectedRoom = room;
 
+	public int GetRoomId() => selectedRoom.roomId;
+
 	public Rooms GetSelectedRoom() => selectedRoom;
+
+	public void ResetRoomUI()
+	{
+		foreach(var room in _roomLists)
+		{
+			PoolableMono mono = room.Value.gameObject.GetComponent<PoolableMono>();
+			PoolManager.Instance.Push(mono, PoolUIListEnum.Rooms);
+		}
+		Debug.Log("Roomlist was cleared");
+		_roomLists.Clear();
+	}
 }

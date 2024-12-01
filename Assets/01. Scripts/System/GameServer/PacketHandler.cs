@@ -66,6 +66,39 @@ public class PacketHandler
 
 	}
 
+	internal static void S_LoadingstatusHandler(PacketSession session, IMessage message)
+	{
+		S_Loadingstatus status = message as S_Loadingstatus;
+
+		Debug.Log($"is all loaded : {status.IsAllLoaded}, now loaded user count : {status.LoadedUsers.Count}");
+
+		if (status.IsAllLoaded)
+		{
+			//게임스타트 코루틴 실행
+			Debug.Log("all user loaded, game start");
+
+			foreach(var player in status.LoadedUsers)
+			{
+				InGameScene.Instance.AddPlayer(player.Usernum, player);
+			}
+
+			InGameScene.Instance.gameFlow.GameStarting();
+		}
+		else
+		{
+			//현재 로딩된 인원 출력
+			if(status.LoadedUsers.Contains(DBManager.Instance.GetUserInfo()))
+			{
+				InGameScene.Instance.gameFlow.SetLoadingProcess(status.LoadedUsers.Count, status.Userlimit);
+			}
+			else
+			{
+				Debug.Log(status.LoadedUsers.Count);
+			}
+		}
+
+	}
+
 	internal static void S_LobbydebugHandler(PacketSession session, IMessage message)
 	{
 
@@ -78,15 +111,31 @@ public class PacketHandler
 
 	internal static void S_MoveHandler(PacketSession session, IMessage message)
 	{
+		S_Move move = message as S_Move;
+		if (InGameScene.Instance == null)
+			return;
 
+		InGameScene.Instance.MovePacket(move.PlayerId, new Vector2(move.PosInfo.MoveDir.PosX, move.PosInfo.MoveDir.PosY));
 	}
 
 	internal static void S_NewroomcreatedHandler(PacketSession session, IMessage message)
 	{
+		if (RoomManager.Instance == null)
+			return;
+
 		S_Newroomcreated newRoom = message as S_Newroomcreated;
 
-		RoomManager.Instance.CreateRoom(newRoom.Info.RoomId, newRoom.Info.RoomName, newRoom.Info.Userlimit, newRoom.Info.UserNames.Count, newRoom.Info.UsePw);
+		RoomManager.Instance.CreateRoomUI(newRoom.Info.RoomId, newRoom.Info.RoomName, newRoom.Info.Userlimit, newRoom.Info.Userinfo.Count, newRoom.Info.UsePw);
 
+	}
+
+	internal static void S_PlayeraimHandler(PacketSession session, IMessage message)
+	{
+		S_PlayerAim aim = message as S_PlayerAim;
+		if (InGameScene.Instance == null)
+			return;
+
+		InGameScene.Instance.AimPacket(aim.PlayerId, new Vector2(aim.Dir.PosX, aim.Dir.PosZ));
 	}
 
 	internal static void S_RefreshHandler(PacketSession session, IMessage message)
@@ -99,6 +148,12 @@ public class PacketHandler
 		S_Roomcreate create = message as S_Roomcreate;
 
 		StandRoomScene.Instance.SetRoomUI(create.Roomname, create.Roomlimit, create.Usepw);
+	}
+
+	internal static async void S_RoomgamestartHandler(PacketSession session, IMessage message)
+	{
+		DBManager.Instance.SetUserInfo((message as S_Roomgamestart).UserInfo);
+		SceneManager.Instance.LoadScene(SceneManager.SceneList.InGame);
 	}
 
 	internal static void S_RoomjoinerHandler(PacketSession session, IMessage message)
@@ -119,6 +174,17 @@ public class PacketHandler
 
 	internal static void S_RoomrefreshHandler(PacketSession session, IMessage message)
 	{
+		if (RoomManager.Instance == null)
+			return;
+
+		RoomManager.Instance.ResetRoomUI();
+
+		S_Roomrefresh refresh = message as S_Roomrefresh;
+
+		foreach(var i in refresh.Info)
+		{
+			RoomManager.Instance.CreateRoomUI(i.RoomId, i.RoomName, i.Userlimit, i.Userinfo.Count, i.UsePw);
+		}
 
 	}
 
@@ -134,7 +200,11 @@ public class PacketHandler
 
 	internal static void S_ShootHandler(PacketSession session, IMessage message)
 	{
+		S_Shoot shoot = message as S_Shoot;
+		if (InGameScene.Instance == null)
+			return;
 
+		InGameScene.Instance.ShootPacket(shoot.ObjectId);
 	}
 
 	internal static void S_SpawnHandler(PacketSession session, IMessage message)

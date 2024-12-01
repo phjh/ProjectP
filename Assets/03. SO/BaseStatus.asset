@@ -20,5 +20,5 @@ MonoBehaviour:
   reloadTime: 0
   maxBulletCount: 3
   currentBulletCount: 3
-  fireBulletCount: 2
-  bounceCount: 1000
+  fireBulletCount: 1
+  bounceCount: 1

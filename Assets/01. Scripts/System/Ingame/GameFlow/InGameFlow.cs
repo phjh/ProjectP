@@ -1,6 +1,9 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 // 이건 접속할때 만들어주고 서버랑 InGame상태 연동해줄예정 + 코드 옮길 예정
 public enum GameState
@@ -37,19 +40,22 @@ public class InGameFlow : MonoBehaviour
     private List<Cards> cards = new List<Cards>();
 	private CardsInfo GetRandomCard => cardInfos[Random.Range(0, cardInfos.Count)];
 
+    #endregion
+
+    #region Loading variables
+
+    [SerializeField]
+    private Slider _loadingBar;
+    [SerializeField]
+    private TextMeshProUGUI _loadingText;
+    [SerializeField]
+    private RectTransform _loadingUI;
+    [SerializeField]
+    private TextMeshProUGUI _loadingUserText;
+    [SerializeField]
+    private TextMeshProUGUI _loadingInfoText;
+
 	#endregion
-
-	private void Start()
-	{
-        GameManager.Instance.game = this;
-
-        InitCards();
-	}
-
-	private void OnDestroy()
-	{
-		GameManager.Instance.game = null;
-	}
 
 	private void Update()
 	{
@@ -78,10 +84,13 @@ public class InGameFlow : MonoBehaviour
         GameManager.Instance.player._input.Enable();
     }
 
-	private void InitCards()
+	public void InitCards()
     {
+        Debug.Log("init card");
+
         Player player = GameManager.Instance.player;
-        UserStatus stat = player.status;
+        UserStatus stat = new UserStatus();
+        stat = player.status;
         IAttackable attack = player.attackComponent;
         IShieldable shield = player.shieldComponent;
         foreach(var card in cards)
@@ -107,6 +116,27 @@ public class InGameFlow : MonoBehaviour
     private IEnumerator SetSelectCountDown()
     {
         yield return new WaitForSeconds(1f);
+    }
+
+	#endregion
+
+	#region Loading Methods
+
+    public void SetLoadingProcess(int num, int limitnum)
+    {
+        _loadingBar.value = Mathf.Clamp((float)num/limitnum, 0.2f, 0.9f);
+        _loadingUserText.text = $"{num} / {limitnum} 로딩완료\n다른 유저를 기다리는중...";
+    }
+
+    public void GameStarting() => StartCoroutine(GameStartingCoroutine());
+
+	IEnumerator GameStartingCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _loadingBar.value = 1;
+        InitCards();
+        yield return new WaitForSeconds(0.5f);
+        _loadingUI.gameObject.SetActive(false);
     }
 
 	#endregion

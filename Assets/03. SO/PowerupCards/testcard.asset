@@ -17,7 +17,7 @@ MonoBehaviour:
   cardName: test
   cardDescription: testcard/test
   cardStats: damage + 1/test + 2
-  _ability: {fileID: 0}
+  _ability: {fileID: 11400000, guid: 9975cf87c7feb104385d96becf0a1d44, type: 2}
   _editStat:
     HP: 1
     damage: 1

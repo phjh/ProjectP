@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 public class SceneManager : MonoSingleton<SceneManager>
 {
 	private void Awake()
@@ -22,5 +24,19 @@ public class SceneManager : MonoSingleton<SceneManager>
 		UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nowScene.ToString() + "Scene");
 	}
 
+	public void LoadScene(SceneList scene)
+	{
+		nowScene = scene;
+		UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nowScene.ToString() + "Scene");
+	}
+
+	public async Task LoadSceneAsync(SceneList scene)
+	{
+		await Task.Run(() =>
+		{
+			nowScene = scene;
+			UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nowScene.ToString() + "Scene");
+		});
+	}
 
 }

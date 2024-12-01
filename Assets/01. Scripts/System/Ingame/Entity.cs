@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ public abstract class Entity : PoolableMono, IDamageable
     private float _maxhp;
     private float _nowhp;
 
-    public ObjectTeam team { get; set; }
+    public Team team { get; set; }
     public float maxHp { get { return _maxhp; } set { _maxhp = value; } }
     public float nowHp { get { return _nowhp; } set { _nowhp = value; } }
     public bool isAlive { get { return nowHp > 0; } }
@@ -27,7 +28,7 @@ public abstract class Entity : PoolableMono, IDamageable
     #endregion
 
     [SerializeField]
-    protected ObjectTeam TestTeam;
+    protected Team TestTeam;
 
     protected Rigidbody2D _rb;
 
@@ -36,7 +37,6 @@ public abstract class Entity : PoolableMono, IDamageable
         _rb = GetComponent<Rigidbody2D>();
         GameScoreinit();
         RoundInit();
-        team = TestTeam;
     }
 
     //

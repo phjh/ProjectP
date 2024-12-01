@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/00. Scenes/BuildScene/StandRoomScene.unity
     guid: ac142f054721e504ea4ebc3f5d7f4712
+  - enabled: 1
+    path: Assets/00. Scenes/BuildScene/InGameScene.unity
+    guid: db1b0b635c217e14591ce8605bd9277e
   m_configObjects: {}

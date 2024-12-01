@@ -5,8 +5,8 @@ using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,6 +55,9 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 	[SerializeField]
 	private TMP_InputField enterPassword;
 
+	[SerializeField]
+	private RectTransform startBtn;
+
 	private C_Roomjoin tempJoin;
 
 	#endregion
@@ -62,6 +65,8 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 	private void Start()
 	{
 		_chatInputField.onEndEdit.AddListener(INPUTFIELD_SendChat);
+		C_Enterlobby enter = new C_Enterlobby();
+		NetworkManager.Instance.Send(enter);
 		//SetData();
 	}
 
@@ -121,6 +126,7 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 		userinfo.UserName = DBManager.Instance.userName;
 		userinfo.UserScore = DBManager.Instance.userScore;
 		create.UserInfo = userinfo;
+		startBtn.gameObject.SetActive(true);
 
 		Debug.Log("send Create room packet");
 		Debug.Log($"name : {create.Roomname}, limit:{create.Roomlimit}, usepw : {create.Usepw}");
@@ -130,13 +136,18 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 	public void LeftRoom()
 	{
 		_gameRoom.gameObject.SetActive(false);
+		startBtn.gameObject.SetActive(false);
 
 		//탈출 패킷 전송
 	}
 
 	public void StartGame()
 	{
+		C_Roomgamestart start = new C_Roomgamestart();
 
+		start.Info = RoomManager.Instance.GetSelectedRoom().GetRoomInfo();
+
+		NetworkManager.Instance.Send(start);
 	}
 
 	public void JoinRoomButton()
@@ -148,7 +159,7 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 		join.Userinfo.UserName = DBManager.Instance.userName;
 		join.Userinfo.UserScore = DBManager.Instance.userScore;
 		join.Roomid = room.roomId;
-		if (room.isLocked)
+		if (room.isLocked.isActiveAndEnabled)
 		{
 			tempJoin = join;
 			SetEnterPasswordUI(true);
@@ -163,6 +174,8 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 		SetEnterPasswordUI(false);
 		C_Roomjoin join = tempJoin;
 		join.Pw = enterPassword.text;
+		join.Userinfo.UserName = DBManager.Instance.userName;
+		join.Userinfo.UserScore = DBManager.Instance.userScore;
 		NetworkManager.Instance.Send(join);
 		tempJoin = null;
 	}
@@ -174,19 +187,23 @@ public class StandRoomScene : MonoSingleton<StandRoomScene>
 		Rooms room = RoomManager.Instance.GetSelectedRoom();
 		_gameRoomName.text = room.roomname.text;
 		_isgameLocked.gameObject.SetActive(room.isLocked);
-
-		_players[room.nowUserCount].SetUI(join.Userinfo.UserName, join.Userinfo.UserScore);
-		room.nowUserCount++;
+		Debug.Log("count : " + join.Usercount);
+		_players[Mathf.Clamp(join.Usercount - 1, 0, 11)].SetUI(join.Userinfo.UserName, join.Userinfo.UserScore);
 
 	}
 
 	public void JoinRoomInfos(S_Roomjoiner join)
 	{
 		int usercount = join.Users.Count;
-		for (int i = 0; i < usercount; i++) 
+		for (int i = 0; i < 10; i++)
 		{
-			_players[i].SetUI(join.Users[i].UserName, join.Users[i].UserScore);
+			_players[i].gameObject.SetActive(i < join.Userlimit);
+			_players[i].SetUI("", 0);
 		}
+		for (int i = 0; i < usercount; i++) 
+			_players[i].SetUI(join.Users[i].UserName, join.Users[i].UserScore);
+
+
 	}
 
 

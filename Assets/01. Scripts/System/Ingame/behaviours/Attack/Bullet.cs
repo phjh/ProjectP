@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ public class Bullet : PoolableMono
 {
     private Rigidbody2D rb;
 
-    private ObjectTeam team;
+    private Team team;
     private Action collisionevent;
     private int bounceCount = 0;
     private float damage = 0;
@@ -23,7 +24,7 @@ public class Bullet : PoolableMono
         rb.useFullKinematicContacts = true;
     }
 
-    public void Init(Action start, Action collision, UserStatus stat, Vector2 mousePos, ObjectTeam team)
+    public void Init(Action start, Action collision, UserStatus stat, Vector2 mousePos, Team team)
     {
         start?.Invoke();
         collisionevent = collision;

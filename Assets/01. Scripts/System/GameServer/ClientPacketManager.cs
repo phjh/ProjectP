@@ -50,6 +50,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SRoomjoiner, PacketHandler.S_RoomjoinerHandler);		
 		_onRecv.Add((ushort)MsgId.SLobbydebug, MakePacket<S_Lobbydebug>);
 		_handler.Add((ushort)MsgId.SLobbydebug, PacketHandler.S_LobbydebugHandler);		
+		_onRecv.Add((ushort)MsgId.SRoomgamestart, MakePacket<S_Roomgamestart>);
+		_handler.Add((ushort)MsgId.SRoomgamestart, PacketHandler.S_RoomgamestartHandler);		
 		_onRecv.Add((ushort)MsgId.SSpawn, MakePacket<S_Spawn>);
 		_handler.Add((ushort)MsgId.SSpawn, PacketHandler.S_SpawnHandler);		
 		_onRecv.Add((ushort)MsgId.SDestroy, MakePacket<S_Destroy>);
@@ -60,12 +62,16 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SRoundend, PacketHandler.S_RoundendHandler);		
 		_onRecv.Add((ushort)MsgId.SCardselect, MakePacket<S_Cardselect>);
 		_handler.Add((ushort)MsgId.SCardselect, PacketHandler.S_CardselectHandler);		
+		_onRecv.Add((ushort)MsgId.SLoadingstatus, MakePacket<S_Loadingstatus>);
+		_handler.Add((ushort)MsgId.SLoadingstatus, PacketHandler.S_LoadingstatusHandler);		
 		_onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
 		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);		
 		_onRecv.Add((ushort)MsgId.SShoot, MakePacket<S_Shoot>);
 		_handler.Add((ushort)MsgId.SShoot, PacketHandler.S_ShootHandler);		
 		_onRecv.Add((ushort)MsgId.SChangeHp, MakePacket<S_ChangeHp>);
-		_handler.Add((ushort)MsgId.SChangeHp, PacketHandler.S_ChangeHpHandler);
+		_handler.Add((ushort)MsgId.SChangeHp, PacketHandler.S_ChangeHpHandler);		
+		_onRecv.Add((ushort)MsgId.SPlayeraim, MakePacket<S_PlayerAim>);
+		_handler.Add((ushort)MsgId.SPlayeraim, PacketHandler.S_PlayeraimHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

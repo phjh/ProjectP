@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ public class Enemy : Agent, IDamageable, IAttackable, IShieldable
     public Action CollisionEvent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     public float maxHp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     public float nowHp { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public ObjectTeam team { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public Team team { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     public void Attack()
     {

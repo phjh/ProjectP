@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Google.Protobuf.Protocol;
 
 public class PlayerAttack : PlayerInherit, IAttackable
 {
@@ -35,20 +36,32 @@ public class PlayerAttack : PlayerInherit, IAttackable
 
 	private void FixedUpdate()
 	{
+        if (_input == null)
+            return;
+
+		SetPlayerAttackDir(_input.mousePos);
+    }
+
+    public void SetPlayerAttackDir(Vector2 mousePos, bool isOther = false)
+    {
+		if (_input == null)
+			return;
+
 		Vector3 position = transform.position;
-		Vector3 mousePosition = Camera.main.ScreenToWorldPoint(_input.mousePos);
+		Vector3 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
 
 		Vector2 dir = new Vector2
-	    (
-		    mousePosition.x - position.x,
-		    mousePosition.y - position.y
-	    );
+		(
+			mousePosition.x - position.x,
+			mousePosition.y - position.y
+		);
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        transform.rotation = rotation;
+		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		transform.rotation = rotation;
 
-    }
+        
+	}
 
 	private IEnumerator FireBullet()
     {
@@ -56,13 +69,28 @@ public class PlayerAttack : PlayerInherit, IAttackable
         Vector3 mousePosition = _input.mousePos;
         for (int i = 0; i < _status.fireBulletCount; i++)
         {
+            SendShootPacket();
+
             Bullet bullet = PoolManager.Instance.Pop(PoolObjectListEnum.Bullet) as Bullet;
             bullet.transform.position = position;
             bullet.Init(FireEvent, CollisionEvent, _status, mousePosition, _player.team);
+            
             yield return new WaitForSeconds(0.1f);
         }
-
     }
+
+    private void SendShootPacket()
+    {
+        C_Shoot shoot = new C_Shoot() { Info = new BulletInfo() };
+
+        shoot.Info.Team = _player.team;
+
+        foreach(var i in _player.attackComponent)
+        {
+
+        }
+
+	}
 
     private void SetAttackCooltime()
     {
