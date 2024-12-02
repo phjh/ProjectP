@@ -59,6 +59,7 @@ public class Cards : MonoBehaviour
 	public void OnSelected()
 	{
 		card.Init(_stat, _attack, _shield);
+		//GameManager.Instance.player
 		this.gameObject.SetActive(false);
 	}
 }

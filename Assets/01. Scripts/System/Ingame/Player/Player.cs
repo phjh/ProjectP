@@ -15,7 +15,6 @@ public enum EventType
 
 public class Player : Entity
 {
-    
     [SerializeField]
     private PlayerUI playerUI;
 
@@ -28,7 +27,7 @@ public class Player : Entity
     public IAttackable attackComponent = null;
     public IShieldable shieldComponent = null;
 
-    private Dictionary<EventType, Dictionary<string, Action>> CardEvents = new();
+    public Dictionary<EventType, Dictionary<int, Action>> CardEvents = new();
 
 	private void Awake()
 	{
@@ -78,12 +77,15 @@ public class Player : Entity
         }
     }
 
-    public void AddCardEvent(Action act = null, string methodName = "", EventType type = EventType.None)
+    public void AddCardEvent(Action act = null, int cardID = 0, EventType type = EventType.None)
     {
         if(attackComponent == null || shieldComponent == null)
             FindComponent();
-        
-        switch (type)
+
+        if (cardID == 0)
+            return;
+
+		switch (type)
         {
             case EventType.AttackStart:
                 attackComponent.FireEvent += act;
@@ -101,16 +103,16 @@ public class Player : Entity
                 Debug.LogWarning("No type Selected");
                 return;
         }
-        CardEvents[type].Add(methodName, act);
+        CardEvents[type].Add(cardID, act);
     }
 
-    public void DeleteCardEvent(string methodName = "", EventType type = EventType.None)
+    public void DeleteCardEvent(int cardID = 0, EventType type = EventType.None)
     {
         if (attackComponent == null || shieldComponent == null)
             FindComponent();
 
-        CardEvents[type].TryGetValue(methodName, out Action act);
-        CardEvents[type].Remove(methodName);
+        CardEvents[type].TryGetValue(cardID, out Action act);
+        CardEvents[type].Remove(cardID);
 
         switch (type)
         {

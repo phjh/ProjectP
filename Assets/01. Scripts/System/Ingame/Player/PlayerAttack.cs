@@ -85,11 +85,8 @@ public class PlayerAttack : PlayerInherit, IAttackable
 
         shoot.Info.Team = _player.team;
 
-        foreach(var i in _player.attackComponent)
-        {
 
-        }
-
+        NetworkManager.Instance.Send(shoot);
 	}
 
     private void SetAttackCooltime()
