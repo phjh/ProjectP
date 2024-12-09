@@ -131,11 +131,11 @@ public class PacketHandler
 
 	internal static void S_PlayeraimHandler(PacketSession session, IMessage message)
 	{
-		S_PlayerAim aim = message as S_PlayerAim;
+		S_Playeraim aim = message as S_Playeraim;
 		if (InGameScene.Instance == null)
 			return;
 
-		InGameScene.Instance.AimPacket(aim.PlayerId, new Vector2(aim.Dir.PosX, aim.Dir.PosZ));
+		InGameScene.Instance.AimPacket(aim.PlayerId, new Vector3(aim.Dir.PosX, aim.Dir.PosY, aim.Dir.PosZ * 180));
 	}
 
 	internal static void S_RefreshHandler(PacketSession session, IMessage message)

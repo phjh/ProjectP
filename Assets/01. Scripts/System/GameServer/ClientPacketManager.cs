@@ -70,7 +70,7 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SShoot, PacketHandler.S_ShootHandler);		
 		_onRecv.Add((ushort)MsgId.SChangeHp, MakePacket<S_ChangeHp>);
 		_handler.Add((ushort)MsgId.SChangeHp, PacketHandler.S_ChangeHpHandler);		
-		_onRecv.Add((ushort)MsgId.SPlayeraim, MakePacket<S_PlayerAim>);
+		_onRecv.Add((ushort)MsgId.SPlayeraim, MakePacket<S_Playeraim>);
 		_handler.Add((ushort)MsgId.SPlayeraim, PacketHandler.S_PlayeraimHandler);
 	}
 

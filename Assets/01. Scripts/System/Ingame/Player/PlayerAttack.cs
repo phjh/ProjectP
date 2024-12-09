@@ -60,8 +60,14 @@ public class PlayerAttack : PlayerInherit, IAttackable
 		Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 		transform.rotation = rotation;
 
-        
-	}
+        C_Playeraim aim = new C_Playeraim() { Dir = new Direction() };
+	    
+        aim.Dir.PosX = mousePosition.x;
+        aim.Dir.PosY = mousePosition.y;
+        aim.Dir.PosZ = mousePosition.z;
+
+        NetworkManager.Instance.Send(aim);
+    }
 
 	private IEnumerator FireBullet()
     {
@@ -69,13 +75,13 @@ public class PlayerAttack : PlayerInherit, IAttackable
         Vector3 mousePosition = _input.mousePos;
         for (int i = 0; i < _status.fireBulletCount; i++)
         {
-            SendShootPacket();
-
             Bullet bullet = PoolManager.Instance.Pop(PoolObjectListEnum.Bullet) as Bullet;
             bullet.transform.position = position;
             bullet.Init(FireEvent, CollisionEvent, _status, mousePosition, _player.team);
             
             yield return new WaitForSeconds(0.1f);
+            
+            SendShootPacket();
         }
     }
 
@@ -85,8 +91,29 @@ public class PlayerAttack : PlayerInherit, IAttackable
 
         shoot.Info.Team = _player.team;
 
+        if (_player.CardEvents.ContainsKey(EventType.AttackStart))
+        {
+            foreach(var i in _player.CardEvents[EventType.AttackStart])
+            {
+                for(int j = 0; j < i.Value.selectedCounts; j++)
+                {
+                    shoot.Info.Abilities.Add(i.Key);
+                }
+            }
+        }
 
-        NetworkManager.Instance.Send(shoot);
+        if (_player.CardEvents.ContainsKey(EventType.AttackCollision))
+        {
+		    foreach (var i in _player.CardEvents[EventType.AttackCollision])
+		    {
+			    for (int j = 0; j < i.Value.selectedCounts; j++)
+			    {
+				    shoot.Info.Abilities.Add(i.Key + 100);
+			    }
+		    }
+        }
+
+		NetworkManager.Instance.Send(shoot);
 	}
 
     private void SetAttackCooltime()

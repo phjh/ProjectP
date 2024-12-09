@@ -362,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4da47d8d5e4613429f25e4405057131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
 --- !u!1 &2369295516025793600
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +475,7 @@ MonoBehaviour:
   playerUI: {fileID: 6872266047293566285}
   playerComponents:
   - {fileID: 1599839112677243995}
+  - {fileID: 9110407676920958484}
   _input: {fileID: 11400000, guid: 8db24c5a4f9a4cc4bbc3481bd118144a, type: 2}
   status: {fileID: 11400000, guid: 23f16637d3a700f4ebdd28c14ffda930, type: 2}
 --- !u!58 &5355370326496184920
@@ -1027,7 +1029,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 100919985857504471}
-  - component: {fileID: 8088083478037361332}
+  - component: {fileID: 9110407676920958484}
   m_Layer: 7
   m_Name: PlayerAiming
   m_TagString: Untagged
@@ -1051,7 +1053,7 @@ Transform:
   - {fileID: 6673232364706154127}
   m_Father: {fileID: 627939008022971290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8088083478037361332
+--- !u!114 &9110407676920958484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1060,7 +1062,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8257414234979843751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 030015410ad66a44cba71d395ba3edde, type: 3}
+  m_Script: {fileID: 11500000, guid: 66b274ac969e53f4791e7a838f10b514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   firePos: {fileID: 6300504859478221233}

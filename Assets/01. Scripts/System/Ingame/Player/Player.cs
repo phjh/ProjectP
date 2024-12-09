@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum EventType
 {
@@ -27,7 +28,7 @@ public class Player : Entity
     public IAttackable attackComponent = null;
     public IShieldable shieldComponent = null;
 
-    public Dictionary<EventType, Dictionary<int, Action>> CardEvents = new();
+    public Dictionary<EventType, Dictionary<int, Ability>> CardEvents = new();
 
 	private void Awake()
 	{
@@ -103,7 +104,15 @@ public class Player : Entity
                 Debug.LogWarning("No type Selected");
                 return;
         }
-        CardEvents[type].Add(cardID, act);
+        if (CardEvents[type].TryGetValue(cardID, out var value))
+        {
+            CardEvents[type][cardID].Selected();
+        }
+        else
+        {
+            CardEvents[type].Add(cardID, new Ability());
+            CardEvents[type][cardID].Selected(act);
+        }
     }
 
     public void DeleteCardEvent(int cardID = 0, EventType type = EventType.None)
@@ -111,22 +120,28 @@ public class Player : Entity
         if (attackComponent == null || shieldComponent == null)
             FindComponent();
 
-        CardEvents[type].TryGetValue(cardID, out Action act);
-        CardEvents[type].Remove(cardID);
+        if(CardEvents[type].TryGetValue(cardID, out var value))
+        {
+            value.Clear();
+        }
+        else
+        {
+            Debug.LogError("bug");
+        }
 
         switch (type)
         {
             case EventType.AttackStart:
-                attackComponent.FireEvent -= act;
+                attackComponent.FireEvent -= value.abilityAction;
                 break;
             case EventType.AttackCollision:
-                attackComponent.CollisionEvent -= act;
+                attackComponent.CollisionEvent -= value.abilityAction;
                 break;
             case EventType.ShieldStart:
-                shieldComponent.ShieldStart -= act;
+                shieldComponent.ShieldStart -= value.abilityAction;
                 break;
             case EventType.ShieldCollision:
-                shieldComponent.ShieldCollision -= act;
+                shieldComponent.ShieldCollision -= value.abilityAction;
                 break;
             default:
                 Debug.LogWarning("No type Selected");
@@ -166,4 +181,6 @@ public class Player : Entity
     }
 
     public PlayerAttack GetPlayerAttack() => playerComponents[1] as PlayerAttack;
+
+    public OtherPlayerAttack GetOtherPlayerAttack() => playerComponents[1] as OtherPlayerAttack;
 }

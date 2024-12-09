@@ -47,11 +47,11 @@ public class Bullet : PoolableMono
 
     private void SetDir(Vector2 mousePos)
     {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
+        //Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
         Vector2 direction = new Vector2
             (
-                mousePosition.x - transform.position.x,
-                mousePosition.y - transform.position.y
+				mousePos.x - transform.position.x,
+				mousePos.y - transform.position.y
             );
     
         rb.velocity = direction.normalized * speed;

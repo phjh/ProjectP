@@ -75,15 +75,20 @@ public class InGameScene : MonoSingleton<InGameScene>
 		if (usernum == DBManager.Instance.usernum)
 			return;
 
-		otherPlayers[playerData[usernum]].GetPlayer().GetPlayerAttack().Attack();
+		otherPlayers[playerData[usernum]].GetPlayer().GetOtherPlayerAttack().Attack();
 	}
 
-	public void AimPacket(int usernum, Vector2 dir)
+	public void AimPacket(int usernum, Vector3 dir)
 	{
 		if (usernum == DBManager.Instance.usernum)
 			return;
 
-		otherPlayers[playerData[usernum]].GetPlayer().GetPlayerAttack().SetPlayerAttackDir(dir);
+		if (playerData.TryGetValue(usernum, out UserInfo info))
+		{
+			Debug.Log("aim num : " + usernum);
+
+			otherPlayers[info].GetPlayer().GetOtherPlayerAttack().SetPlayerAttackDir(dir);
+		}
 	}
 
 }
