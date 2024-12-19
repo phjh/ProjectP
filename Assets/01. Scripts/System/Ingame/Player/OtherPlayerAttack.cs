@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Google.Protobuf.Protocol;
 using UnityEngine.UIElements;
+using UnityEditor.Rendering;
 
 public class OtherPlayerAttack : PlayerInherit, IAttackable
 {
@@ -18,6 +19,8 @@ public class OtherPlayerAttack : PlayerInherit, IAttackable
 	private Transform firePos;
 
 	protected bool needReload => (_status.currentBulletCount - _status.fireBulletCount) <= 0;
+
+	public Vector2 mousePos;
 
 	protected override void Init()
 	{
@@ -38,6 +41,9 @@ public class OtherPlayerAttack : PlayerInherit, IAttackable
 	{
 		if (_input == null)
 			return;
+
+		mousePos = dir;
+		
 		Vector2 setdir = new Vector2
 		(
 			dir.x - transform.position.x,
@@ -52,12 +58,12 @@ public class OtherPlayerAttack : PlayerInherit, IAttackable
 	private IEnumerator FireBullet()
 	{
 		Vector3 position = firePos.position;
-		Vector3 dir = transform.rotation * Vector3.right;
+		Vector3 dir = mousePos;
 		for (int i = 0; i < _status.fireBulletCount; i++)
 		{
 			Bullet bullet = PoolManager.Instance.Pop(PoolObjectListEnum.Bullet) as Bullet;
 			bullet.transform.position = position;
-			bullet.Init(FireEvent, CollisionEvent, _status, dir, _player.team);
+			bullet.Init(FireEvent, CollisionEvent, _status, dir, _player.team, true);
 
 			yield return new WaitForSeconds(0.1f);
 		}

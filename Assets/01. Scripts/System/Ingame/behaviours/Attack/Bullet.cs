@@ -24,7 +24,7 @@ public class Bullet : PoolableMono
         rb.useFullKinematicContacts = true;
     }
 
-    public void Init(Action start, Action collision, UserStatus stat, Vector2 mousePos, Team team)
+    public void Init(Action start, Action collision, UserStatus stat, Vector2 mousePos, Team team, bool others = false)
     {
         start?.Invoke();
         collisionevent = collision;
@@ -33,7 +33,11 @@ public class Bullet : PoolableMono
         damage = stat.damage;
         speed = stat.bulletSpeed;
         this.team = team;
-        SetDir(mousePos);
+
+        if (others)
+            SetOthersDir(mousePos);
+        else
+            SetDir(mousePos);
         //Testing();
     }
 
@@ -45,13 +49,24 @@ public class Bullet : PoolableMono
         Debug.Log(color);
     }
 
+    private void SetOthersDir(Vector2 mousePos)
+    {
+		Vector2 direction = new Vector2
+	    (
+		    mousePos.x - transform.position.x,
+		    mousePos.y - transform.position.y
+	    );
+
+		rb.velocity = direction.normalized * speed;
+	}
+
     private void SetDir(Vector2 mousePos)
     {
-        //Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
         Vector2 direction = new Vector2
             (
-				mousePos.x - transform.position.x,
-				mousePos.y - transform.position.y
+				mousePosition.x - transform.position.x,
+				mousePosition.y - transform.position.y
             );
     
         rb.velocity = direction.normalized * speed;

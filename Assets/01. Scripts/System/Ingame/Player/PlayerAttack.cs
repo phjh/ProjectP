@@ -34,7 +34,7 @@ public class PlayerAttack : PlayerInherit, IAttackable
         }
     }
 
-	private void FixedUpdate()
+	private void Update()
 	{
         if (_input == null)
             return;
@@ -71,6 +71,8 @@ public class PlayerAttack : PlayerInherit, IAttackable
 
 	private IEnumerator FireBullet()
     {
+        SetPlayerAttackDir (_input.mousePos);
+
         Vector3 position = firePos.position;
         Vector3 mousePosition = _input.mousePos;
         for (int i = 0; i < _status.fireBulletCount; i++)
@@ -88,6 +90,7 @@ public class PlayerAttack : PlayerInherit, IAttackable
     private void SendShootPacket()
     {
         C_Shoot shoot = new C_Shoot() { Info = new BulletInfo() };
+        shoot.Info.Dir = new Direction();
 
         shoot.Info.Team = _player.team;
 
@@ -112,6 +115,16 @@ public class PlayerAttack : PlayerInherit, IAttackable
 			    }
 		    }
         }
+
+		Vector2 mousePosition = Camera.main.ScreenToWorldPoint(_input.mousePos);
+		Vector2 direction = new Vector2
+			(
+				mousePosition.x - transform.position.x,
+				mousePosition.y - transform.position.y
+			);
+
+        shoot.Info.Dir.PosX = direction.x;
+        shoot.Info.Dir.PosY = direction.y;
 
 		NetworkManager.Instance.Send(shoot);
 	}

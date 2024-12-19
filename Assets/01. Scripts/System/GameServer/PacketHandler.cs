@@ -135,7 +135,7 @@ public class PacketHandler
 		if (InGameScene.Instance == null)
 			return;
 
-		InGameScene.Instance.AimPacket(aim.PlayerId, new Vector3(aim.Dir.PosX, aim.Dir.PosY, aim.Dir.PosZ * 180));
+		InGameScene.Instance.AimPacket(aim.PlayerId, new Vector3(aim.Dir.PosX, aim.Dir.PosY, aim.Dir.PosZ));
 	}
 
 	internal static void S_RefreshHandler(PacketSession session, IMessage message)
