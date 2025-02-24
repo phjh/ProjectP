@@ -84,7 +84,10 @@ public class InGameScene : MonoSingleton<InGameScene>
 		if (usernum == DBManager.Instance.usernum)
 			return;
 
+		Debug.LogWarning(dir);
+
 		OtherPlayerAttack other = otherPlayers[playerData[usernum]].GetPlayer().GetOtherPlayerAttack();
+		other.updateAiming = false;
 		other.mousePos = dir;
 		other.Attack();
 	}

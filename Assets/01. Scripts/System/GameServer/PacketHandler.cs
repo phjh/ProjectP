@@ -204,7 +204,7 @@ public class PacketHandler
 		if (InGameScene.Instance == null)
 			return;
 
-		InGameScene.Instance.ShootPacket(shoot.ObjectId);
+		InGameScene.Instance.ShootPacket(shoot.ObjectId, new Vector2(shoot.Info.Dir.PosX, shoot.Info.Dir.PosY));
 	}
 
 	internal static void S_SpawnHandler(PacketSession session, IMessage message)

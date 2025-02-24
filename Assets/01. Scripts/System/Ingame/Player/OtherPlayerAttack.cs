@@ -18,6 +18,9 @@ public class OtherPlayerAttack : PlayerInherit, IAttackable
 	[SerializeField]
 	private Transform firePos;
 
+
+	public bool updateAiming { get; set; } = true;
+
 	protected bool needReload => (_status.currentBulletCount - _status.fireBulletCount) <= 0;
 
 	public Vector2 mousePos;
@@ -39,7 +42,7 @@ public class OtherPlayerAttack : PlayerInherit, IAttackable
 
 	public void SetPlayerAttackDir(Vector3 dir, bool isOther = false)
 	{
-		if (_input == null)
+		if (_input == null || updateAiming == true)
 			return;
 
 		mousePos = dir;
@@ -67,6 +70,7 @@ public class OtherPlayerAttack : PlayerInherit, IAttackable
 
 			yield return new WaitForSeconds(0.1f);
 		}
+		updateAiming = true;
 	}
 
 	private void SetAttackCooltime()
